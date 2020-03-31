@@ -1,0 +1,46 @@
+Q1:
+The patch improves "ls"'s performance.
+Before appending the patch, -a and -A
+does not do the right thing in regard
+of overriding.
+Now it is having the correct bahavior as
+we expect.
+
+Q2:
+If the company adopts this patch,
+it should watch out for its previous
+codes which involves -a and -A. This
+is because now the sccript will have a
+different behavior and will cause
+products to crash due to incapability.
+
+
+Q3:
+Traceback (most recent call last):
+  File "randline.py", line 70, in <module>
+    main()
+  File "randline.py", line 64, in main
+    sys.stdout.write(generator.chooseline())
+  File "randline.py", line 34, in chooseline
+    return random.choice(self.lines)
+  File "/usr/local/cs/Python-2.7.16/lib/python2.7/random.py",
+       line 277, in choice
+    return seq[int(self.random() * len(seq))]
+    # raises IndexError if seq is empty
+IndexError: list index out of range
+
+Q4:
+It gives an erroe message regarding syntax
+File "randline.py", line 65
+    except IOError as (errno, strerror):
+    	   	      ^
+SyntaxError: invalid syntax
+My guess for the reason is that Python updated
+its error handling method
+
+
+Q5:
+File "shuf.py", line 178
+    print (tp, end="")
+                  ^
+SyntaxError: invalid syntax

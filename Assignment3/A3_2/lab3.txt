@@ -1,0 +1,75 @@
+1. Command:
+$ scp /Users/yichenzhou/Downloads/coreutils-8.29.tar.xz
+    classfur@lnxsrv06.seas.ucla.edu:~
+$ man tar
+$ tar -Jxvf coreutils-8.29.tar.xz
+$ gpg --verify --keyring ./gnu-keyring.gpg coreutils-8.29.tar.xz.sig
+
+#I download the file to local computer and
+scp it into linux server.
+#Then I use tar to unzip the file
+-J: filter the archive through xz
+-x: extract to disk from archive
+-v: list each filename
+-f: read the archive from a specified file
+#when running the verification command, there are error messages:
+gpg: WARNING: options in `/u/eng/class/classfur/.gnupg/gpg.conf'
+     are not yet active during this run
+gpg: keyring `/u/eng/class/classfur/.gnupg/pubring.gpg' created
+gpg: keyblock resource `./gnu-keyring.gpg': No such file or directory
+gpg: can't open `coreutils-8.29.tar.xz.sig': No such file or directory
+gpg: verify signatures failed: No such file or directory
+#My guess to this error message is that gpg.conf is not yet active
+
+2. Command:
+$ cd coreutils-8.29
+$ vi INSTALL
+$ vi README
+$ ./configure --prefix=/u/eng/class/classfur/conreutilsInstall
+$ make
+$ make install
+
+#Actually i tried "./configure && make && make install",
+as specified in the INSTALL, first. But this will give
+error messages ant the end of installation process.
+
+3. Command:
+$ cd ~/conreutilsInstall
+$ ls -a -A
+$ ls -A -a
+
+4. Command:
+$ touch patchFile
+$ emacs patchFile
+  #and copy everything in the patch webpage
+  #into patchFile
+$ man patch
+$ cd ~
+$ cd coreutils-8.29
+$ patch -p1 <patchFile
+#One interesting problem is that we have to be in
+the directory "coreutils-8.29" for the patch command
+#Otherwise it cannot find the dile to patch
+#message after patch:
+Hunk #1 succeeded at 1900 (offset -3 lines).
+patching file tests/local.mk
+patching file tests/ls/a-option.sh
+
+5. Command:
+$ make
+
+#There are several warnings presented.
+'automake-1.15' is missing on your system.
+You should only need it if you modified 'Makefile.am' or
+'configure.ac' or m4 files included by 'configure.ac'.
+The 'automake' program is part of the GNU Automake package:
+<http://www.gnu.org/software/automake>
+It also requires GNU Autoconf, GNU m4 and Perl in order to run:
+<http://www.gnu.org/software/autoconf>
+<http://www.gnu.org/software/m4/>
+<http://www.perl.org/>
+
+6. Command:
+$ ls -aA
+$ ls -Aa
+#Now it is working with correct overriding.
