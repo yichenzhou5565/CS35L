@@ -1,0 +1,122 @@
+##Setting up Beagles Bones
+Here are a few things I found subtle in the
+set-up process:
+* I am using a Mac OS system 10.14, so I installed
+  the 9.2 version driver for everything to work out
+* restart process must follow the installation,
+  otherwise it might not work
+
+##logging in:
+$ sudo ssh root@192.168.7.2
+##in the local terminal
+
+
+###Get my IP address:
+# ifconfig
+SoftAp0   Link encap:Ethernet  HWaddr c4:f3:12:81:a0:d6  
+          inet addr:192.168.8.1  Bcast:192.168.8.255  Mask:255.255.255.0
+          inet6 addr: fe80::c6f3:12ff:fe81:a0d6/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:33 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:7806 (7.6 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:569 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:569 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:51981 (50.7 KiB)  TX bytes:51981 (50.7 KiB)
+
+usb0      Link encap:Ethernet  HWaddr c4:f3:12:81:a0:d0  
+          inet addr:192.168.7.2  Bcast:192.168.7.255  Mask:255.255.255.0
+          inet6 addr: fe80::c6f3:12ff:fe81:a0d0/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2411 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:820 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:211613 (206.6 KiB)  TX bytes:145954 (142.5 KiB)
+
+wlan0     Link encap:Ethernet  HWaddr 2c:f7:f1:06:97:ed  
+          inet addr:10.97.85.235  Bcast:10.97.85.255  Mask:255.255.255.0
+          inet6 addr: fe80::2ef7:f1ff:fe06:97ed/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST DYNAMIC  MTU:1500  Metric:1
+          RX packets:2180 errors:0 dropped:5 overruns:0 frame:0
+          TX packets:1112 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:399838 (390.4 KiB)  TX bytes:137389 (134.1 KiB)
+
+####add user for my partner
+
+# sudo useradd -d /home/zjh -m zjh
+# sudo passwd zjh
+
+The password I set for my partner is zjh
+
+# sudo mkdir .ssh
+# sudo chown -R zjh .ssh
+# sudo chmod 700 .ssh
+
+##################################
+##################################
+##################################
+##################################
+Server Steps:
+
+# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+/root/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+82:cc:16:76:e1:1c:3d:d5:43:a7:43:de:65:12:55:59 root@605190756.lasr.cs.ucla.edu
+The key's randomart image is:
++---[RSA 2048]----+
+|      o. ..oo +oE|
+|     o oo  oo+ = |
+|    o +  .  +..  |
+|   + +       .   |
+|    = . S        |
+|   .   .         |
+|                 |
+|                 |
+|                 |
++-----------------+
+
+#####I used empty password
+
+# ssh-copy-id -i zyc@10.97.85.249
+
+# ssh zyc@10.97.85.249
+
+# eval `ssh-agent`
+Agent pid 1750
+# ssh-add
+Identity added: /root/.ssh/id_rsa (rsa w/o comment)
+
+# exit
+# sudo apt-get
+
+#exit
+
+
+###Then I ssh in with -X option
+and change the wifi connection to UCLA-Web
+
+# sudo apt-get install x11-apps
+
+###Then change the wifi connection back to CR-3760
+
+# cd /home/zjh
+# ssh -X zyc@10.97.85.249
+
+# xeyes
+
+####everything is working out just fine
