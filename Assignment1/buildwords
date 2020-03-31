@@ -1,0 +1,36 @@
+#input file: that hwhw something
+#output file: hwords
+
+#remove all '?'
+sed 's/?//g' |
+
+#remove all '<u>'
+sed 's/<u>//g' |
+
+#remove all '</u>'
+sed 's/<\/u>//g' |
+
+#extract all lines with '<td>'
+grep '<td>' |
+
+#extract all lines with '</td>'
+grep '</td>' |
+
+#delete all '<td>'
+sed 's/<td>//g' |
+
+#delete all '/td'
+sed 's/<\/td>//g' |
+
+#as said in the spec, convert all uppercase, if any, to lowercase
+tr "[:upper:]" "[:lower:]" |
+
+#[quoted from the spec]treat ` (ASCII grave accent) as if it were ' (ASCII apostrophe, which we use to represent ‘okina)
+#for some mysdterious reason, this won't work: tr "`" "'" |
+sed "s/\`/\'/g" |
+
+#sort and remove all duplicates
+sort -u
+
+#I really intend to stop here, but it seems that there are a few additional steps necessary
+#remove all English but non-Hawaiian words
