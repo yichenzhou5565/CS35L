@@ -1,0 +1,109 @@
+1.
+Commands:
+$ touch hw9.txt
+
+2.
+Commands:
+$ git checkout v3.0 -b quote
+M src/cmp.c
+M src/diff.c
+M src/diff3.c
+M src/dir.c
+M src/sdiff.c
+M src/side.c
+M src/util.c
+Switched to a new branch 'quote'
+##The -b in git commands allows me to create a
+new branch and switch into it.
+
+3.
+Commands:
+$ patch -p1 quote-3.0-patch.txt
+
+4.
+add-change-log-entry-other-window:
+C-x 4 a
+adds a new entry to the change log file for the file you are editing
+
+5.
+Commands
+$ emacs quote-3.0-patch.txt
+
+Keystrokes:
+C-x 4 a
+2019-11-14  Yichen Zhou  <classfur@lnxsrv05.seas.ucla.edu>
+
+        * quote-3.0-patch.txt:
+
+C-x C-s
+
+##Then quit emacs
+
+6.
+Commands:
+$ git add .
+$ man git
+$ git commit -F ChangeLog
+$ git commit -F ChangeLog
+[quote 18719d7] 2019-11-14  Yichen Zhou  <classfur@lnxsrv05.seas.ucla.edu>
+ Committer: Yichen Zhou <classfur@lnxsrv05.seas.ucla.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 16 files changed, 821 insertions(+), 47 deletions(-)
+ create mode 100644 #README-hacking#
+ create mode 100644 quote-3.0-patch.txt
+ create mode 100644 src/cmp.c.rej
+ create mode 100644 src/diff.c.rej
+ create mode 100644 src/diff3.c.rej
+ create mode 100644 src/dir.c.rej
+ create mode 100644 src/sdiff.c.rej
+ create mode 100644 src/side.c.rej
+ create mode 100644 src/util.c.rej
+
+##Commit the changes using the entry stated in the
+previous problems
+
+7.
+Commands:
+$ git format-patch -1 --stdout >formatted-patch.txt
+$ emacs formatted-patch.txt
+##This is trivial. Basically just what I did in lab
+section is the same
+
+8.
+Commands:
+$ git am formatted-patch2.txt
+$ ./bootstrap
+$ make
+$ make check
+
+9.
+$ cd diffutils
+$ make distdir
+
+#The computer ran for a pretty long time, but we can see
+from its output that it is working by verifying the content
+of ChangeLog file
+##Here, a new directory is created inside the diffutils directory
+
+10.
+$ cd ~eggert/src/gnu/emacs
+$ gitk
+
+##Note that before executing these commands,
+I first installed XQuartz since I am using a Mac OS
+then I exit the current lnxsrv, then logged in again
+with option -X
+
+##Above commands is to find the newest file no newer
+than Jan 25 2015.
+
