@@ -1,0 +1,138 @@
+##Design for tr2b.c
+1. Error Handling:
+   using strlen to test if from and to are
+      of the same length
+   using argc==3 to decide if the number of
+      of arguments is correct
+   using a 'map' in C to map the from to to
+      achieve this by using indexing in array
+2. Translation Process and Output
+   use getchar() to loop through the entire text
+   if cannot find substitution in 'map'
+      put this char by using putchar()
+   Otherwise, put the substituting char
+
+##Simple Testing for tr2b.c
+$ scp tr2b.c classfur@lnxsrv.seas.ucla.edu
+$ gcc -std=c11 tr2b.c -o tr2b
+$ echo 'ab\[-c' | ./tr2b 'a\[-' 'ptsd'
+pbtsdc
+###This is the testcase given by cute grading TA
+
+##Design for tr2u.c
+1. Copy everything in tr2b.c into tr2u.c
+2. Modifications:
+   1) change curChar from int to char array[1]
+   2) Use read(0, curChar, 1) to handle loop
+   3) Use write(1, curChar, 1) for outputs
+   4) Update error messages accordingly
+
+###Simple Tests for tr2u.c
+$ gcc -std=c11 tr2u.c -o tr2u
+$ echo 'ab\[-c' | ./tr2u 'a\[-' 'ptsd'
+pbtsdc
+### As given
+$ echo 'ab\[-c' | ./tr2u 'a\[-' 'pts'
+Different strlen NOT allowed.
+###Test error message
+
+###Testing with strace
+
+###################################
+###When copying one file to another:
+$ strace -c ./tr2b '1234567890' 'abcdefghij' <bigfile.txt >output1.txt
+#This gives 182 system calls,
+79 read, 77 write, 2 open, 2 close, 4 fstat,
+10 mmap, 3 mprotect,
+1 each for munmap, brk, access, execve, and arch_prctl
+##Time running this command is very fast.
+
+$ strace -c ./tr2u 'a' 'x' <bigfile.txt >output1.txt
+#This gives 10000024 system calls:
+5000000 write, 5000002 read,
+2 each for oepn, close, fstat,
+8 for mmap, 3 for mprotect
+i each for munmap, brk, access, execve, and arch_prctl
+##Requires a long time running this command
+
+###Analysis:
+From the strace commands, we can see that using functions like
+putchar() and getchar() are indeed more efficient. This is because
+such function, compared to using system calls directly, are able to
+combine several system calls together, and will thus accelerate the
+process significantly. Like tr2u, if we are using a system call
+whenever we want to get a character or write something into the
+standard output, many system calls will be used, so the program
+tend to be slow and inefficient.
+
+###########################################################
+###When copying a file to terminal:
+$ strace -c ./tr2b '1234567890' 'abcdefghij' <bigfile.txt
+#This gives 20003 system calls:
+19898 write, 79 read,
+2 each for open and close,
+4 fstat, 10 mmap, 3 mprotect
+1 each for munmap, brk, access, execve, and arch_prctl
+##This prints a lot of things onto the screen, but the
+running time is very fast: 0.003692 seconds, where 0.003615
+seconds for write, and 0.000077 seconds for read.
+
+$ strace -c ./tr2u '1234567890' 'abcdefghij' <bigfile.txt
+#This gives 10000024 system calls:
+5000000	    write, 5000002 read,
+2 each for oepn, close,	   fstat,
+8 for mmap, 3 for mprotect
+i each for munmap, brk,	access,	execve,	and arch_prctl
+##Requires a long time running this command
+##!!!!My computer is screaming!!! No exagerration!
+IT REALLY IS!! I feel sorry for my computer...
+and the lnxsrv...
+###Note that the numbers are exactly the same as the previous
+test in tr2u.
+
+###Analysis:
+As long as the previous test for copying file to one another has already
+executed almost the maximum amount of system calls,
+the number of system calls would not increase here.
+But my computer is letting out the sound of spinning crazily,
+so I suspect printing to terminal is more burdensome for the hardware.
+Note that when testing tr2b, the number of system calls increased
+significantly, and all of them contribute by the write. This is because
+the system would use some extra command to invoke system calls when trying
+to write things onto terminal. However, no matter what, using putchar()
+and getchar() seems more efficient in the case of this lab.
+And pose less burden both on the computer, and the person who is waiting
+in front of the computer...
+
+###########################################
+####Testing with time:
+
+$ time ./tr2b '1234567890' 'abcdefghij' <bigfile.txt >output1.txt
+real   0m0.153s
+user   0m0.101s
+sys    0m0.009s
+
+$ time ./tr2u '1234567890' 'abcdefghij' <bigfile.txt >output2.txt
+real   0m8.390s
+user   0m1.172s
+sys    0m7.178s
+
+###Analysis:
+tr2b is a lot faster then tr2u. Reasons are pretty much stated already:
+tr2u are using too many system calls, which would slow down the process
+significantly, while using functions like putchar() and getchar()
+combine many of those system calls automatically, speeding up
+the running process, reflecting in a much shorter running time.
+
+#################################################################
+########################## END OF lab.txt #######################
+#################################################################
+
+System call for malloc(..):
+brk, or implicitly through mmap()
+
+System call for realloc(...):
+mmap()
+
+System call for free(..):
+mprotect()
