@@ -1,0 +1,197 @@
+Commands:
+$ cd Downloads
+$ scp coreutils-with-bug.tar.gz classfur@lnxsrv06.seas.ucla.edu:~
+#download the coreutils with bug version into local computer
+and scp it into the seasnet server
+
+Commands:
+$ tar xzvf coreutils-with-bug.tar.gz
+#unzip
+
+Command:
+$ cd bugInstall
+$ pwd
+$ cd ~/coreutils-with-bug
+$ ./configure --prefix=/u/eng/class/classfur/bugInstall
+##configure the file
+
+Command:
+$ make
+##compilation
+##Error Message:
+In file included from utimecmp.c:41:
+utimens.h:2:5: error: conflicting types for 'futimens'
+    2 | int futimens (int, char const *, struct timespec const [2]);
+      |     ^~~~~~~~
+In file included from utimecmp.h:25,
+                 from utimecmp.c:25:
+/usr/include/sys/stat.h:373:12: note:
+	previous declaration of 'futimens' was here
+  373 | extern int futimens (int __fd,
+      	       	   	    const struct timespec __times[2]) __THROW;
+      |            ^~~~~~~~
+make[3]: *** [Makefile:659: utimecmp.o] Error 1
+make[3]: Leaving directory
+	 '/w/home.26/class/classfur/coreutils-with-bug/lib'
+make[2]: *** [Makefile:414: all] Error 2
+make[2]: Leaving directory
+	 '/w/home.26/class/classfur/coreutils-with-bug/lib'
+make[1]: *** [Makefile:419: all-recursive] Error 1
+make[1]: Leaving directory
+	 '/w/home.26/class/classfur/coreutils-with-bug'
+make: *** [Makefile:357: all] Error 2
+###Problem I have with the "as-is" version:
+cannot compile
+
+Commands:
+$ wget http://web.cs.ucla.edu/classes/fall19/cs35L/assign/coreutils.diff
+#download the patch
+
+Commands:
+$ patch -p0 <coreutils.diff
+##Patch the file
+
+Commands:
+$ ./configure --prefix=/u/eng/class/classfur/bugInstall
+$ make
+$ emacs coreutils.diff
+### Configure, compile the file
+##Thanks heaven this time the compilation is successful
+
+###The patch is making it work because it is fixing the bugs in the as-is one
+###From the error messgae when we try to 'make' the as-is version, we know
+###that the problem is due to the function "futimens"'s conflicting types
+### and if we view what this patch file is doing,
+## we can easily find that the file dedicates its life to making modifications
+## regarding the function 'futimens'.
+###For exampkle, the diff patch file
+delete lines like
+'int futimens (int, char const *, struct timespec const [2]);'
+and add statements like
+'int coreutils_futimens (int, char const *, struct timespec const [2]);'
+###And this makes the conflicting type problem no longer exists
+###i.e., through renaming the functions that has conflicts....
+
+Commands:
+$ make install
+##Install the patch version
+
+Commands:
+cd ~/coreutils-with-bug/src
+./ls
+##try to run the bugged version of ls
+
+Commands:
+###For simplicity and clarity
+###I would copy the command lines and corresponding ouputs below
+$ tmp=$(mktemp -d)
+$ cd $tmp
+$ touch -d '1918-11-11 11:00 GMT' wwi-armistice-cs35L
+$ touch now
+$ sleep 1
+$  touch now1
+$ TZ=UTC0 ls -lt --full-time wwi-armistice-cs35L now now1
+-rw-r--r-- 1 classfur class 0 2019-10-24 01:08:26.417069882 +0000 now1
+-rw-r--r-- 1 classfur class 0 2019-10-24 01:08:16.391895949 +0000 now
+-rw-r--r-- 1 classfur class 0
+	   1918-11-11 11:00:00.000000000 +0000 wwi-armistice-cs35L
+$ TZ=UTC0 ~/bugInstall/bin/ls -lt --full-time wwi-armistice-cs35L now now1
+-rw-r--r-- 1 classfur class 0
+	   1918-11-11 11:00:00.000000000 +0000 wwi-armistice-cs35L
+-rw-r--r-- 1 classfur class 0 2019-10-24 01:08:26.417069882 +0000 now1
+-rw-r--r-- 1 classfur class 0 2019-10-24 01:08:16.391895949 +0000 now
+###We can see that as long as we are running the bugged version, the problem
+###really does exist
+
+Commands:
+$ cd ~
+$ cd coreutils-with-bug/src
+$ gdb ./ls
+(gdb) info func
+###The idea here is that I want to view all functions
+###to get an idea of what are the functions look like
+###and one interesting thing is that the functions names are
+###pretty obvious
+###many directly related with time
+###Thus, i choose names with mtime and set breakpoints
+###I'm not expecting this to succeed
+###but just get a big idea is enough
+
+Commands:
+(gdb) b main
+Breakpoint 1 at 0x402110: file ls.c, line 1129.
+(gdb) b compstr_mtime
+Breakpoint 2 at 0x4051b0: compstr_mtime. (2 locations)
+(gdb) b compare_mtime
+Breakpoint 3 at 0x407010: compare_mtime. (2 locations)
+(gdb) r -lt --full-time /tmp/tmp.V3JuRt3myZ/now /tmp/
+###The program of course stop at the breakpoint at main
+###but that is useless so I'll just skip the step here.
+###Hit the 'si' and 'c' instructions and then we will stop at
+###out breakpoint 3:
+Breakpoint 3, compare_mtime (a=0x7ffff7f87010, b=0x7ffff7f870c0) at ls.c:2884
+2884	static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
+
+###There is not much information
+###so step in and see what's going to happen in there
+(gdb) si
+timespec_cmp (b=..., a=...) at ../lib/timespec.h:49
+49	  return diff ? diff : a.tv_nsec - b.tv_nsec;
+###Well this is interesting
+
+Commands:
+$ cd ~/coreutils-with-bug/lib
+$ ls
+$ emacs timespec.h
+###well when we go into this header file
+###I was surprised to find that this file is surprisingly short
+###and notice that it is very likely to incur overflow in the
+###function 'timespec_cmp'
+
+Commands:
+$ cp timespec.h timespec2.h
+$ emacs timespec2.h
+###For safety, I will not make modifications on the original header file
+###instead I made a copy and will stick to that
+
+####Modifies the file:
+static inline int
+timespec_cmp (struct timespec a, struct timespec b)
+{
+  if(a.tv_sec>b.tv_sec)
+    return 1;
+  if(a.tv_sec<b.tv_sec)
+    return -1;
+  if(a.tv_nsec==b.tv_nsec)
+    return 0;
+  if(a.tv_nsec>b.tv_nsec)
+    return 1;
+  return -1;
+
+}
+
+#Produce the diff file
+$ diff -u ~/coreutils-with-bug/timespec.h ~/coreutils-with-bug/timespec2.h
+       >lab4.diff
+$ emacs lab4.diff
+
+###testing:
+$ patch -p0 <~/lab4.diff
+$ ./configure --prefix=/u/eng/class/classfur/bugInstall
+$ make
+$ make install
+
+$ tmp=$(mktemp -d)
+$ cd $tmp
+$ touch -d '1918-11-11 11:00 GMT' wwi-armistice-cs35L
+$ touch now
+$ sleep 1
+$ touch nowl
+$ TZ=UTC0 ls -lt --full-time wwi-armistice-cs35L now nowl
+-rw-r--r-- 1 eggert csfac 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice-cs35L
+-rw-r--r-- 1 eggert csfac 0 2018-10-29 16:43:16.805404419 +0000 nowl
+-rw-r--r-- 1 eggert csfac 0 2018-10-29 16:43:15.801376773 +0000 now
+$ cd
+$ rm -fr $tmp
+
+###WORKING!!
