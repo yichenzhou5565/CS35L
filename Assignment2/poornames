@@ -1,0 +1,230 @@
+#!/bin/bash
+IFS=$'\n'
+var0='^[\_a-zA-Z]{1}[-\_\.a-zA-Z]{0,13}$'
+if [ "$#" -eq 1 ] && [[ "$1" == "-"* ]] && ! [[ "$1" == "-r" ]]; then
+	echo wrong option >stderr
+	exit 1
+elif [ "$#" -eq 2 ] && [[ "$2" == "-"* ]] && ! [[ "$2" == "-r" ]]; then
+	echo wrong option >stderr
+	exit 1
+fi
+po()
+{
+    if [ "$#" -eq 0 ]; then
+	ls -a . | grep -E -v $var0 >a
+	ls -a . | grep -E $var0 | sort -f | uniq -Di >b
+	while read filename
+	do
+            if [ -d "$filename" ]; then
+		if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+		    if [[ "$filename" == *"/" ]]; then
+			echo "./"$filename
+		    else
+            		echo "./"$filename"/"
+		    fi
+		fi
+            else
+		echo "./"$filename
+            fi
+	done <a
+	while read filename
+	do
+	    if [ -d "$filename" ]; then
+		if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+	    	    if [[ "$filename" == *"/" ]]; then
+			echo "./"$filename
+		    else
+			echo "./"$filename"/"
+		    fi
+		fi
+	    else
+		echo "./"$filename
+	    fi
+	done <b
+    elif [[ "$1" == "-r" ]] && [ "$#" -eq 1 ]; then
+	ls -a . | grep -E -v $var0 >c
+	ls -a . | grep -E $var0 | sort -f | uniq -Di >d
+	while read filename
+	do
+            if [ -d "$filename" ]; then
+		if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+	    	    if [[ "$filename" == *"/" ]]; then
+			echo "./"$filename
+		    else
+			echo "./"$filename"/"
+		    fi
+		fi
+            else
+		echo "./"$filename 
+            fi
+	done <c
+	while read filename
+	do
+            if [ -d "$filename" ]; then
+		if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+	    	    if [[ "$filename" == *"/" ]]; then
+			echo "./"$filename
+		    else
+			echo "./"$filename"/"
+		    fi
+		fi
+            else
+		echo "./"$filename 
+            fi
+	done <d
+	for file in $( find . -maxdepth 1 -type d ) 
+	do
+	    if ! [[ "$file" == "." ]] && [ ! -L "$file" ]; then
+		po -r "$file"
+	    fi
+	done
+    elif [ "$#" -eq 1 ]; then
+	if [ ! -d "$1" ]; then
+	    echo "$1" is not a directory >stderr
+	    exit 1
+	else
+	    ls -a "$1" | grep -E -v $var0 >e
+	    ls -a "$1" | grep -E $var0 | sort -f | uniq -Di >f
+	fi
+	while read filename
+	do
+	    if ! [[ "$1" == *"/" ]]; then
+		if [ -d "$1"/"$filename" ]; then
+		    if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+	    		if [[ "$filename" == *"/" ]]; then
+			    echo $1"/"$filename
+			else
+			    echo $1"/"$filename"/"
+			fi
+		    fi
+		else
+		    echo $1"/"$filename
+		fi
+	    else
+		if [ -d "$1""$filename" ]; then
+                    if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+                        if [[ "$filename" == *"/" ]]; then
+                            echo $1$filename
+                        else
+                            echo $1$filename"/"
+                        fi
+                    fi
+                else
+                    echo $1$filename
+                fi
+	    fi
+	done <e
+	while read filename
+	do
+	    if ! [[ "$1" == *"/" ]]; then
+		if [ -d "$1"/"$filename" ]; then
+		    if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+	    		if [[ "$filename" == *"/" ]]; then
+			    echo $1"/"$filename"/"
+			else
+			    echo $1"/"$filename"/"
+			fi
+		    fi
+		else
+		    echo $1"/"$filename
+		fi
+	    else
+		if [ -d "$1""$filename" ]; then
+                    if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+                        if [[ "$filename" == *"/" ]]; then
+                            echo $1$filename
+                        else
+                            echo $1$filename"/"
+                        fi
+                    fi
+                else
+                    echo $1$filename
+                fi
+	    fi
+	done <f
+    else
+	if [[ "$1" == "-r" ]]; then
+	    if [ ! -d "$2" ]; then
+		echo "$1" is not a directory >stderr
+		exit 1
+	    else
+		ls -a "$2" | grep -E -v $var0 >g
+		ls -a "$2" | grep -E $var0 | sort -f | uniq -Di >h
+	    fi
+	    while read filename
+	    do
+		if ! [[ "$2" == *"/" ]]; then
+		    if [ -d "$2"/"$filename" ]; then
+			if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+			    if [[ "$filename" == *"/" ]]; then
+				echo $2"/"$filename
+			    else
+				echo $2"/"$filename"/"
+			    fi
+			fi
+		    else
+			echo $2"/"$filename 
+		    fi
+		else
+		    if [ -d "$2""$filename" ]; then
+			if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+                            if [[ "$filename" == *"/" ]]; then
+				echo $2$filename
+                            else
+				echo $2$filename"/"
+                            fi
+			fi
+                    else
+			echo $2$filename
+                    fi
+		fi
+	    done <g
+	    while read filename
+	    do
+		if ! [[ "$2" == *"/" ]]; then
+		    if [ -d "$2"/"$filename" ]; then
+			if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+	    		    if [[ "$filename" == *"/" ]]; then
+				echo $2"/"$filename
+			    else
+				echo $2"/"$filename"/"
+			    fi
+			fi
+		    else
+			echo $2"/"$filename
+		    fi
+		else
+		    if [ -d "$2""$filename" ]; then
+                        if ! [[ "$filename" == ".." ]] && ! [[ "$filename" == "." ]] ; then
+                            if [[ "$filename" == *"/" ]]; then
+                                echo $2$filename
+                            else
+                                echo $2$filename"/"
+                            fi
+                        fi
+                    else
+                        echo $2$filename
+                    fi
+		fi
+	    done <h
+	    for file1 in $( find  "$2" -maxdepth 1 -type d )
+	    do
+		if ! [[ "$file1" == "$2" ]] && [ ! -L "$file1" ] ; then
+		    po -r "$file1"
+		fi
+	    done
+	else
+	    echo too many arguments >stderr
+	    exit 1
+	fi
+    fi
+}
+if [ "$#" -ge 3 ]; then
+	echo too many arguments >stderr
+elif [ "$#" -eq 2 ]; then
+    po "$1" "$2"
+elif [ "$#" -eq 1 ]; then
+    po "$1"
+else
+    po
+fi
