@@ -1,0 +1,115 @@
+1. 
+man man
+man -k
+
+2. 
+mv: /usr/bin/mv /usr/local/cs/bin/mv /usr/share/man/man1p/mv.1p.gz /usr/share/man/man1/mv.1.gz
+sh: /usr/bin/sh /usr/share/man/man1p/sh.1p.gz /usr/share/man/man1/sh.1.gz
+Keytrokes: 
+whereis mv
+whereis sh
+
+3. 
+ar (1)               - create, modify, and extract from archives
+ar (1p)              - create and maintain library archives
+pr (1)               - convert text files for printing
+pr (1p)              - print files
+tr (1)               - translate or delete characters
+tr (1p)              - translate characters
+Keystrokes:
+man man
+man -k ^.r$
+
+4. /usr/bin/emacs-24.3
+Commands:
+man ls -l
+ls -l /usr/bin/emacs
+ls -l /etc/alternatives/emacs
+ls -l /usr/bin/emacs-24.3
+
+5. 
+For /usr/bin/gcc: gcc version 4.8.5 20150623 (Red Hat 4.8.5-39) (GCC)
+For gcc: 	  gcc version 9.2.0 (GCC)  
+They are different programs because the one from /usr/bin/gcc is not updated while the other one is.
+Keystrokes:
+/usr/bin/gcc -v
+gcc -v
+
+6. 
+u+sx means: Add permission of execution and setuid for user
+o-w means: Remove permission of writing for others
+
+7. Commands:
+find /usr/local/cs -mtime -28
+
+8. 
+280
+Commands:
+find . -type l | wc -l
+
+
+9. 
+Oldest regular file: librom1394.so.0.3.0
+Commands:
+cd /usr/lib64
+man ls
+ls -a -l -t
+
+10. 
+When invoked without arguments, locale displays the current locale settings for  each  locale  category  (see  locale(5)), based on the settings of the environment variables that control the locale (see locale(7)).  Values  for variables set in the environment are printed without double quotes, implied values are printed with double quotes.
+Commands:
+man locale
+whereis locale
+which locale
+
+11. 
+downcase-dwim
+downcase-region
+downcase-word
+Commands:
+C-h a sort
+
+12. 
+C-M-r: Regexp I-search backward. Search things entered from the back of the buffer
+C-M-v: scrolls the window down
+Commands:
+C-M-r c a n
+C-M-v
+C-M-v
+
+13. 
+C-g is a quit command which allows immediate quitting.
+Commands: 
+C-g
+C-h a C-g
+
+
+14. 
+The yank functions allows one to paste the previous killed text from the kill pool, beginning with the most recently killed ones.
+We use C-y to yank.
+Command:
+cp assign1.html test.html
+emacs test.html
+C-k M-> C-y
+C-x C-c
+n
+yes
+
+
+15. 
+Emacs has the line "total used in directory 326744 available 12473816" while the shell does not. And also the ls command may not be able to list those hidden files because it does not use "-a", while emacs should be able to do so.
+Shell Command:
+cd /usr/bin
+ls -l /usr/bin
+Emacs Command:
+C-x d /usr/bin Enter
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,76 @@
+1.1:
+2. C-s H T M L Enter
+3. C-s s c a v e n g e r Enter M-b
+4. C-s s e l f - r e f e r e n t i a l Enter M-b M-b
+5. C-s a r r o w Enter M-b
+6. C-e
+7. C-a
+8. Yes. We can use corresponding search, move, etc. keybinding commands in Emacs.
+9. No.
+10. C-x C-c
+
+1.2:
+2. M-g M-g 1 9 Enter C-k
+3. C-s D E L E T E - M E SP D E L E T E - M E SP D E L E T E - M E Enter C-a C-k C-k
+4. C-s h t t p s : / / e n Enter C-s h t t p s : / / e Enter C-u 5 C-k
+5. C-s < ! Enter C-u 5 C-k C-s < ! Enter C-a C-k Backspace
+5. C-s < ! Enter C-s < ! Enter C-b C-b Enter C-b C-b C-b C-b C-b C-u 0 C-k C-n C-u 4 C-k C-s < ! Enter C-a C-k Backspace
+
+1.3:
+2. C-s A s s i g n m e n t SP 1 M-% A s s i g n m e n t SP 4 2 Enter SP SP
+3. C-s U T F - 8 M-% U S - A S C I I Enter SP
+4. C-s [ ^ [ : a s c i i : ] ] C-a C-k C-k C-s [ ^ [ : a s c i i : ] ] C-a C-k C-k C-s [ ^ [ : a s c i. i : ] ] C-a C-k C-k C-s [ ^ [ : a s c i i : ] ] Enter
+5. M-< C-s < / o l > Enter Enter M-e 
+
+1.4: 
+3. M-> M-> C-r < ! Enter M-h M-w C-w C-y M-g M-g 425 C-e C-y Backspace 
+4. M-> C-r < ! Enter C-r < ! Enter M-h M-w M-g M-g 412 C-y 
+	M-> C-r < ! Enter M-> C-r < ! Enter M-> C-r < ! Enter M-> C-r < ! Enter M-h M-w M-g M-g 366 C-y
+	M-> C-r < ! Enter M-> C-r < ! Enter M-> C-r < ! Enter M-> C-r < ! Enter M-> C-r < ! Enter M-h M-w M-g M-g 127 C-y
+5. M-> C-r < ! - - SP d i f f Enter C-b C-@ M-> C-w
+6. C-_
+7. M-> C-r < ! - - SP d i f f Enter C-b C-@ M-> C-w < ! - - - - > C-b C-b C-b SP 
+8. M-< M-% < o l > Enter < o L > Enter y y y y y y y
+I replaced 7 occurrences
+9. C-x C-c y 
+diff -u exer1.html exer4.html >exer4.diff
+emacs exer4.diff
+
+
+1.5:
+1. C-x d Enter + j u n k Enter
+2. C-x d j u n k Enter C-x C-f h e l l o . c
+3. M-x c o m p i l e Enter h e l l o . c Enter
+4. M-! g c c SP - o SP r u n SP h e l l o . c Enter M-! . / r u n Enter C-x b h e l l o - o u t C-u M-! . / r u n Enter M-h C-w C-y
+5. EOF on input
+
+1.6:
+1. C-x b Enter
+2. 2 0 5 - 1 4 0 - 9 2 8 ( r a n d o m ) C-j
+The result I get: 1275741048188157739
+3. ( s e t q SP x SP ( r a n d o m ) ) C-j (s e t q SP y SP ( r a n d o m ) ) C-j
+4. ( * SP x SP y ) C-j
+The product of two variables is -699151010268059776, which is not mathematically correct. In my try, the value assigned to x and y are -809177000835689758 and -185299074479140928, which should give a positive result when computing product.
+5. M-: ( * SP x SP y )
+Output: -699151010268059776 (#o331140735610447363600, #x364c1ddc449de780)
+Difference: Not mathematically correct, but gives three answers: decimal, hex, and oct
+6. No. The variables are pseudo generated, only that the computer generate the "random" variables from a very big pool from certain processes. 
+7. First let me make a few assumptions. Let's assume this is a 32 bit machine, and the number generated from the command random are all integers. Also note that the answer will not be mathematically correct if there is overflow.
+For a 32 bit machine, Tmax = 01...1, Tmin = 10...0
+There will be overflow unless Tmin<=x*y<=Tmax, where Tmin<=x<=Tmax, Tmin<=y<=Tmax. Now we can draw a approximate graph with the horizontal axis representing x, and vertical axis representing y, and the area [Tmin, Tmax]^2 is the sample space, with 2 lines in this graph: one is xy=Tmax, one is xy=Tmin. And areas other than in between the two lines will incur overflow. Because the number is big and hard to compute, we might want to use Monte Carlo Method (maybe?). As the result, the probability that the answer is not mathematically correct, i.e., incurs overflow, is pretty big though. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
